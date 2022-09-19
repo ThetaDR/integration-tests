@@ -150,8 +150,6 @@ func (s *Suite) TestNsm_kuma_universal_vl3() {
 	r.Run(`kubectl --kubeconfig=$KUBECONFIG1 apply -k ./control-plane`)
 	r.Run(`kubectl --kubeconfig=$KUBECONFIG1 apply -f demo-redis.yaml` + "\n" + `kubectl --kubeconfig=$KUBECONFIG1 -n kuma-demo wait --for=condition=ready --timeout=3m pod -l app=redis`)
 	r.Run(`kubectl --kubeconfig=$KUBECONFIG2 apply -f demo-app.yaml` + "\n" + `kubectl --kubeconfig=$KUBECONFIG2 -n kuma-demo wait --for=condition=ready --timeout=3m pod -l app=demo-app`)
-	r.Run(`kubectl --kubeconfig=$KUBECONFIG2 port-forward svc/demo-app -n kuma-demo 5000:5000 &`)
-	r.Run(`response=$(curl -X POST localhost:5000/increment)`)
-	r.Run(`echo $response`)
-	r.Run(`echo $response | grep '"err":null'`)
+	r.Run(`kubectl --kubeconfig=$KUBECONFIG2 port-forward svc/demo-app -n kuma-demo 8081:5000 &`)
+	r.Run(`response=$(curl -X POST localhost:8081/increment)` + "\n" + `echo $response` + "\n" + `echo $response | grep '"err":null'`)
 }
